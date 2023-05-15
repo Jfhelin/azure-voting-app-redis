@@ -2,6 +2,17 @@ name: Deploy AKS-Construction
 
 on:
   workflow_dispatch:
+    inputs:
+      RG:
+        description: 'the resource group where your resources are deployed'
+        required: false
+        type: string
+        default: appdemogroup2
+      NAME:
+        description: 'the name to be used in resource naming'
+        required: false
+        type: string
+        default: appdemo2
 
 permissions:
       id-token: write
@@ -12,9 +23,9 @@ jobs:
     uses: Azure/AKS-Construction/.github/workflows/AKSC_Deploy.yml@0.9.14
     with:
       templateVersion: 0.9.14
-      rg: appdemogroup2
+      rg: ${{ inputs.RG }}
       resourceName: appdemo2
-      templateParams: resourceName=appdemo2 JustUseSystemPool=true custom_vnet=true CreateNetworkSecurityGroups=true registries_sku=Basic acrPushRolePrincipalId=_USER_OBJECT_ID_
+      templateParams: resourceName=${{ inputs.NAME }} JustUseSystemPool=true custom_vnet=true CreateNetworkSecurityGroups=true registries_sku=Basic acrPushRolePrincipalId=_USER_OBJECT_ID_
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
